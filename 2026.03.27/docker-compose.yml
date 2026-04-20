@@ -1,0 +1,43 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    platform: linux/arm64 # ARM
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.local'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.local'
+        # Фикс порта SSH, конфиклы какие-то с macOS
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2222:22'
+    volumes:
+      - 'gitlab_config:/etc/gitlab'
+      - 'gitlab_logs:/var/log/gitlab'
+      - 'gitlab_data:/var/opt/gitlab'
+    shm_size: '256m'
+    networks:
+      default:
+        aliases:
+          - gitlab.local # Чтобы раннер мог разрешить это имя в IP контейнера
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    platform: linux/arm64 # ARM
+    container_name: gitlab-runner
+    restart: always
+    depends_on:
+      - gitlab
+    volumes:
+      # Сокет Docker, runner должен запускать CI/CD контейнеры
+      - /var/run/docker.sock:/var/run/docker.sock
+      - runner_config:/etc/gitlab-runner
+
+volumes:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+  runner_config:

@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: jdb
+      POSTGRES_USER: jdb_user
+      POSTGRES_PASSWORD: passw0rd
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jdb_user -d jdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: > 
+      sh -c "python manage.py migrate && 
+             gunicorn jproject.wsgi:application 
+             --bind 0.0.0.0:8000 
+             --worker-tmp-dir /dev/shm"
+    environment:
+      - POSTGRES_DB=jdb
+      - POSTGRES_USER=jdb_user
+      - POSTGRES_PASSWORD=passw0rd
+      - POSTGRES_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:

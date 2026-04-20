@@ -1,0 +1,47 @@
+# Лёгкий образ
+image: alpine:latest
+
+# Порядок выполнения стейджей
+stages:
+  - build
+  - test
+  - prod
+
+build_job:
+  stage: build
+  tags:
+    - shared
+  script:
+    - echo "Builded successfully"
+
+test_job:
+  stage: test
+  tags:
+    - shared
+  script:
+    - echo "Running tests..."
+    # exit 1 завершает скрипт со статусом ошибки (1)
+    - exit 1 
+  # Разрешаем продолжать работу, даже если всё упало
+  allow_failure: true 
+
+# Вторая (новая) джоба на стадии test для создания артефакта
+test_job_generate_artifact:
+  stage: test
+  tags:
+    - shared
+  script:
+    - echo "Check out my test file! Huh!..."
+    - echo "Artifact generated" > text.txt
+  artifacts:
+    paths:
+      - text.txt
+    expire_in: 1 week # Храним неделю
+
+prod_job:
+  stage: prod
+  tags:
+    - shared
+  script:
+    - echo "Deployed!"
+    - cat text.txt
