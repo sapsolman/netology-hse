@@ -1,9 +1,17 @@
-Решение домашек
+# **Решение домашек**
 
-# netology-hse
+# netology
 В директориях с наименованием даты будут находиться все скрипты по заданию.
-Для проверки необходимо выполнить git clone https://github.com/sapsolman/netology.git в рабочую директорию.
+Для проверки необходимо выполнить клонирование в рабочую директорию:
+
+```bash
+git clone https://github.com/sapsolman/netology.git
+``` 
 
 # hse
 В директориях с наименованием даты будут находиться все скрипты по заданию.
-Для проверки необходимо выполнить git clone https://github.com/sapsolman/netology.git в рабочую директорию.
+Для проверки необходимо выполнить клонирование в рабочую директорию:
+
+```bash
+git clone https://github.com/sapsolman/netology.git
+``` 
