@@ -1,0 +1,75 @@
+# ---------------------------------------------------------
+# STAGES
+# ---------------------------------------------------------
+stages:
+  - build
+  - test
+  - prod
+
+# ---------------------------------------------------------
+# STAGE: BUILD (SCA)
+# ---------------------------------------------------------
+
+gitleaks_scan_job:
+  stage: build
+  tags:
+    - shared
+  image: 
+    name: zricethezav/gitleaks:latest
+    entrypoint: [""] 
+  script:
+    - echo "Сканирования Secret Detection by Gitleaks..."
+    - gitleaks detect --no-git -v --config gitleaks-orig.toml --report-format json --report-path gitleaks-report.json
+  artifacts:
+    paths:
+      - gitleaks-report.json
+    when: always 
+    expire_in: 1 week
+  allow_failure: true
+  
+trivy_sca_scan:
+  stage: build
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  script:
+    - echo "Запуск SCA-сканирования через Trivy..."
+    - trivy fs . --format json --output trivy-report.json
+  # Продолжаеть работу пайплайна при нахождении уязвимостей (требование к заданию)
+  allow_failure: true
+  artifacts:
+    paths:
+      - trivy-report.json
+    # Сохраняет артефакт всегда (требование к заданию)
+    when: always
+    expire_in: 1 week
+
+# ---------------------------------------------------------
+# STAGE: TEST (SAST)
+# ---------------------------------------------------------
+bandit_sast_scan:
+  stage: test
+  image: python:3.10-slim
+  script:
+    - echo "Установка и запуск SAST-сканера Bandit..."
+    - pip install --quiet bandit
+    # Флаг -ll фильтрует уязвимости (оставляет только от Medium и выше)
+    # Флаг -r запускает рекурсивный поиск по директории
+    - bandit -r . -ll -f json -o bandit-report.json
+  allow_failure: true
+  artifacts:
+    paths:
+      - bandit-report.json
+    when: always
+    expire_in: 1 week
+
+# ---------------------------------------------------------
+# STAGE: PROD
+# ---------------------------------------------------------
+prod_deployment_mock:
+  stage: prod
+  image: alpine:latest
+  script:
+    - echo "!!!Сканирование на безопасность проведено!!!"
+    - echo "Отчёты в артифактах"
+    - echo "Место для вашей рекламы..."
