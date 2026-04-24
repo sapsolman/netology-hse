@@ -3,34 +3,37 @@
 1. Клонирование репозитория
 
 ```bash
-# Клонировать репозиторий
-git clone https://github.com/NetSPI/django.nV.git
+    # Клонировать репозиторий
+    git clone https://github.com/NetSPI/django.nV.git
 
-# Перейти в папку проекта
-cd django.nV
+    # Перейти в папку проекта
+    cd django.nV
 ```
 
 2. Установка Gitleaks и TruffleHog (macOS)
 
 ```bash
-# Установить Gitleaks
-brew install gitleaks
+    # Установить Gitleaks
+    brew install gitleaks
 
-# Установить TruffleHog
-brew install trufflehog
+    # Установить TruffleHog
+    brew install trufflehog
 ```
 
 3. Сканирование с помощью Gitleaks
 
 ```bash
-gitleaks detect --no-git -v --config gitleaks-orig.toml --report-format json --report-path gitleaks-report.json
+    gitleaks detect --no-git -v \
+    --config gitleaks-orig.toml \
+    --report-format json \
+    --report-path gitleaks-report.json
 
-* detect — базовая команда для сканирования репозитория
-* --no-git - использовать поиск в текущем каталоге
-* --config - файл с преднастроенной проверкой
-* -v (verbose) — выводит найденные секреты в консоль
-* --report-format - формат вывода отчёта
-* --report-path — сохраняет полный структурированный отчет в файл.
+    * detect — базовая команда для сканирования репозитория
+    * --no-git - использовать поиск в текущем каталоге
+    * --config - файл с преднастроенной проверкой
+    * -v (verbose) — выводит найденные секреты в консоль
+    * --report-format - формат вывода отчёта
+    * --report-path — сохраняет полный структурированный отчет в файл.
 ```
 
 

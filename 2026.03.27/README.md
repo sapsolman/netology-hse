@@ -10,23 +10,23 @@
 В терминале поправить файл hosts (потребуется пароль администратора):
 
 ```Bash
-sudo nano /etc/hosts
+  sudo nano /etc/hosts
 ```
 Добавить в самый конец строку:
 
 ```Plaintext
-127.0.0.1 gitlab.local
+  127.0.0.1 gitlab.local
 ```
 
 3. Запуск сервера
 
 ```Bash
-docker compose up -d
+  docker compose up -d
 ```
 
 Получение первоначального пароля для входа:
 ```Bash
-docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
+  docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
 Перейти на URL: 
@@ -36,13 +36,13 @@ http://gitlab.local, логин — root, пароль — тот, что выд
 *token - получен из GitLab UI
 
 ```Bash
-docker exec -it gitlab-runner gitlab-runner register \
-  --url "http://gitlab.local" \
-  --token "******" \
-  --executor "docker" \
-  --docker-image alpine:latest \
-  --description "Local Shared Runner" \
-  --clone-url "http://gitlab.local" \
-  --docker-network-mode "host"
+  docker exec -it gitlab-runner gitlab-runner register \
+    --url "http://gitlab.local" \
+    --token "******" \
+    --executor "docker" \
+    --docker-image alpine:latest \
+    --description "Local Shared Runner" \
+    --clone-url "http://gitlab.local" \
+    --docker-network-mode "host"
 ```
 

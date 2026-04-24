@@ -2,11 +2,11 @@
 1. Клонирование репозитория
 
 ```bash
-# Клонировать репозиторий
-git clone https://github.com/sapsolman/netology-hse.git
+    # Клонировать репозиторий
+    git clone https://github.com/sapsolman/netology-hse.git
 
-# Перейти в папку проекта
-cd netology-hse
+    # Перейти в папку проекта
+    cd netology-hse
 ```
 
 2. Сканирование с помощью Локальное сканирование (CLI)
